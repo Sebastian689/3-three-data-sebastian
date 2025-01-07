@@ -10,7 +10,6 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-
 const API_ADDRESS = process.env.API_ADDRESS;
 
 export async function loader() {
