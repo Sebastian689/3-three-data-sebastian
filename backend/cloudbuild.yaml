@@ -1,0 +1,27 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build', '-t', 'eu.gcr.io/cloud-computing-continuum-2024/three-data-backend:latest', 
+      './backend/'
+    ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'eu.gcr.io/cloud-computing-continuum-2024/three-data-backend:latest']
+  
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk' # Using gcloud SDK image
+    entrypoint: 'gcloud'
+    args: [
+      'run', 'deploy', 'three-data-backend',
+      '--image', 'eu.gcr.io/cloud-computing-continuum-2024/three-data-backend:latest',
+      '--region', 'europe-west1',
+      '--platform', 'managed',
+      '--allow-unauthenticated',
+      '--set-env-vars', 'INSTANCE_UNIX_SOCKET=/cloudsql/exercise1-436110:europe-west1:custom-db',
+      '--set-env-vars', 'INSTANCE_CONNECTION_NAME=exercise1-436110:europe-west1:custom-db',
+      '--set-env-vars', 'DB_NAME=custom-db',
+      '--set-env-vars', 'DB_USER=DB_USER:latest',
+      '--set-env-vars', 'DB_PASS=password',
+      '--add-cloudsql-instances', 'exercise1-436110:europe-west1:custom-db', # Cloud SQL instance connection
+      '--port', '8080'
+    ]
+options:
+  logging: CLOUD_LOGGING_ONLY

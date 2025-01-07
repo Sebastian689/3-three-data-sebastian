@@ -1,0 +1,12 @@
+steps:
+    - name: 'gcr.io/cloud-builders/docker'
+      args: [
+        'build', '-t',
+        'eu.gcr.io/cloud-computing-continuum-2024/three-data-frontend:latest',
+        '--build-arg', 'REACT_APP_API_ADDRESS=https://run-sql-802314573716.europe-west1.run.app',
+        './frontend/'
+      ]
+    - name: 'gcr.io/cloud-builders/docker'
+      args: ['push', 'eu.gcr.io/cloud-computing-continuum-2024/three-data-frontend:latest']
+  options:
+    logging: CLOUD_LOGGING_ONLY
